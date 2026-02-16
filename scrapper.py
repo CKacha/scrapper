@@ -51,8 +51,51 @@ def main() -> int:
                 row_voter_id = None
                 in_td = False
                 td_buf.clear()
+                continue
+            
+            if not in_tr:
+                continue
+            
+            if not in_td and TD_OPEN_RE.search(line):
+                in_td = True 
+                td_index += 1
+                td_buf = []
+                line = TD_OPEN_RE.sub("", line, count=1)
+            
+            if in_td:
+                td_buf.append(line)
 
+                if TD_CLOSE_RE.search(line):
+                    in_td = False
+                    cell_html = "".join(td_buf)
+                    cell_html = TD_CLOSE_RE.sub("", cell_html)
+                    cell_text = clean_text(cell_html)
 
+                    if td_index == 2:
+                        row_voter_id = cell_text
+                
+            if TR_CLOSE_RE.search(line):
+                in_tr = False
+                rows_seen += 1
+
+                if row_voter_id and row_voter_id.isdigit():
+                    counts[row_voter_id] += 1
+                else:
+                    rows_skipped += 1
+    
+    out_csv = Path("voter_vote_counts.csv")
+    with out_csv.open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["voter_id", "vote_count"])
+        for voter_id, n in sorted(counts.items(), key=lambda kv: (-kv[1], int(kv[0]))):
+            w.writerow([voter_id, n])
+        
+    print("Done")
+    print(f"Rows ended (</tr> seen): {rows_seen}")
+    print(f"Unique Voter IDs: {len(counts)}")
+    print(f"Rows skipped (missing/invalid voter ID): {rows_skipped}")
+    print(f"Saved: {out_csv}")
+    return 0
 
 if __name__ == "__main__":
     raise(os.system.exit(main()))
