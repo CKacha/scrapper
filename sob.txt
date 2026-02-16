@@ -1,0 +1,64 @@
+
+
+<tr>
+    <td>
+
+        1
+
+    </td>
+    <td>
+
+        196
+
+    </td>
+    <td>
+
+        6
+
+    </td>
+    <td>
+
+        130,493
+
+    </td>
+    <td>
+
+        2025-10-14 13:03:58 -0400
+
+    </td>
+    <td>
+
+        2025-10-14 13:03:58 -0400
+
+    </td>
+    <td>
+
+        {"technical": 3, "creativity": 4, "originality": 2, "storytelling": 3}
+
+    </td>
+</tr>
+
+Now how the hell do I parse this 
+
+
+td[0] = id
+td[1] = project id
+td[2] = voter id 
+td[3] = timer spent voting (ms)
+td[4] = created at
+td[5] = updated at
+td[6] = ballot JSON 
+
+libraries needed:
+
+uhhh
+
+some libraries to look into:
+
+pathlib
+sys
+csv 
+re
+annotations from __future__
+Counter from collections 
+
